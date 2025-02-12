@@ -234,49 +234,67 @@
             transform: scale(1.2);
         }
 
-        /* Nút mini game luôn hiển thị ở góc */
+        /* Thêm CSS mới cho game section */
         .game-section {
             position: fixed;
-            bottom: 20px;
             right: 20px;
-            z-index: 1000;
+            bottom: 80px; /* Tăng khoảng cách với bottom */
+            z-index: 999;
         }
 
         .game-toggle {
-            background: rgba(0, 0, 0, 0.6);
-            padding: 8px 15px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 20px;
-            color: rgba(255, 255, 255, 0.8);
+            background: rgba(0, 255, 0, 0.2);
+            border: 2px solid #0f0;
+            color: #0f0;
+            padding: 10px 20px;
+            border-radius: 8px;
             cursor: pointer;
+            font-family: 'Share Tech Mono', monospace;
             transition: all 0.3s ease;
-            font-size: 0.9em;
+            text-shadow: 0 0 5px #0f0;
+            box-shadow: 0 0 15px rgba(0, 255, 0, 0.2);
         }
 
         .game-toggle:hover {
-            background: rgba(0, 0, 0, 0.8);
-            color: #fff;
-            transform: translateY(-2px);
+            background: rgba(0, 255, 0, 0.3);
+            transform: translateY(-3px);
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.4);
         }
 
-        /* Điều chỉnh vị trí nút game */
-        .game-section {
-            position: absolute;
-            bottom: 20px;
-            right: 20px;
-            z-index: 100;
-        }
-
-        @media screen and (max-width: 768px) {
+        /* Responsive cho nút game */
+        @media (max-width: 768px) {
             .game-section {
-                position: static;
-                margin: 10px auto;
+                right: 15px;
+                bottom: 60px;
             }
             
             .game-toggle {
-                font-size: 0.8em;
-                padding: 6px 12px;
+                padding: 8px 15px;
+                font-size: 0.9em;
             }
+        }
+
+        @media (max-width: 480px) {
+            .game-section {
+                right: 10px;
+                bottom: 40px;
+            }
+            
+            .game-toggle {
+                padding: 6px 12px;
+                font-size: 0.85em;
+            }
+        }
+
+        /* Thêm hiệu ứng pulse cho nút */
+        @keyframes buttonPulse {
+            0% { box-shadow: 0 0 15px rgba(0, 255, 0, 0.2); }
+            50% { box-shadow: 0 0 25px rgba(0, 255, 0, 0.4); }
+            100% { box-shadow: 0 0 15px rgba(0, 255, 0, 0.2); }
+        }
+
+        .game-toggle {
+            animation: buttonPulse 2s infinite;
         }
 
         /* Style cho game area */
@@ -713,7 +731,7 @@
             "💭 Nghĩ đơn giản thôi! Càng nghĩ phức tạp càng... gà! 🤯",
             "🎯 Hint: Đừng nhìn chằm chằm vào màn hình nữa, não nó... bay mất rồi! 🧠",
             "🌟 Fun fact: ASCII là cách mã hóa ký tự thành số... nhưng bạn có hiểu không? 😏",
-            "🎪 Đố bạn: Tại sao gà gáy? Vì nó... không biết code! 🐓",
+            "�� Đố bạn: Tại sao gà gáy? Vì nó... không biết code! 🐓",
             "🔍 Hint: Có thể dùng Python... nếu bạn biết Python! 🐍",
             "💡 Fact: 80% người đọc hint này vẫn chưa hiểu gì... 20% còn lại đã bỏ cuộc! 😅",
             "🎯 Hint: Nếu bạn thấy khó quá... thì đúng rồi đó! 😂",
@@ -957,7 +975,7 @@
                     <div class="result-container">
                         <div style="text-align: center;">
                             <p style="color: #ff4444; font-size: 1.2em;">
-                                🐔 CHÚC MỪNG! BẠN CHÍNH THỨC LÀ
+                                �� CHÚC MỪNG! BẠN CHÍNH THỨC LÀ
                             </p>
                             <div class="chicken-number">
                                 CON GÀ THỨ #${chickenNumber}
