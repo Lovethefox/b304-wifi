@@ -297,12 +297,29 @@
             font-size: 30px;
             cursor: pointer;
             user-select: none;
-            transition: transform 0.3s ease;
-            display: inline-block;
+            z-index: 1;
+            transform-origin: center;
         }
 
-        .chicken:hover {
-            transform: scale(1.2);
+        /* Tách riêng animation và transition */
+        .chicken-move {
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @keyframes catchAnimation {
+            0% { transform: scale(1) rotate(0deg); }
+            50% { transform: scale(1.5) rotate(180deg); }
+            100% { transform: scale(1) rotate(360deg); }
+        }
+
+        .chicken-catch {
+            animation: catchAnimation 0.3s ease-out forwards;
+            pointer-events: none;
+        }
+
+        /* Thêm class cho trạng thái di chuyển */
+        .chicken-moving {
+            pointer-events: none;
         }
 
         /* Style cho điểm số */
@@ -312,17 +329,6 @@
             margin: 15px 0;
             font-weight: bold;
             text-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
-        }
-
-        /* Hiệu ứng khi bắt được gà */
-        @keyframes catch {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.5); }
-            100% { transform: scale(1); }
-        }
-
-        .caught {
-            animation: catch 0.3s ease;
         }
 
         /* Thêm CSS cho code block */
@@ -711,7 +717,7 @@
             "🔍 Hint: Có thể dùng Python... nếu bạn biết Python! 🐍",
             "💡 Fact: 80% người đọc hint này vẫn chưa hiểu gì... 20% còn lại đã bỏ cuộc! 😅",
             "🎯 Hint: Nếu bạn thấy khó quá... thì đúng rồi đó! 😂",
-            "�� Hint: Đây không phải là game... mà là bài test IQ! 🧩",
+            "🎯 Hint: Đây không phải là game... mà là bài test IQ! 🧩",
             "🎪 Fun fact: Có người đang gõ từng số vào Google Translate! 📱",
             "🌟 Hint: Đừng dùng Google Translate, nó không hiểu mã ASCII đâu! 😅",
             "💻 Fact: Hacker thực thụ dùng... Notepad để giải! 📝",
@@ -725,6 +731,9 @@
 
         // Biến để theo dõi điểm
         let score = 0;
+
+        // Thêm biến để theo dõi trạng thái game
+        let gameActive = false;
 
         function startGame(isChickenMode) {
             const buttons = document.querySelectorAll('.btn');
@@ -786,25 +795,70 @@
         }
 
         function catchChicken(chicken) {
+            if (!gameActive || chicken.classList.contains('chicken-moving')) return;
+            
             score += 1;
             document.getElementById("score").textContent = `Điểm: ${score}`;
             
-            // Thêm hiệu ứng khi bắt được
-            chicken.classList.add('caught');
-            setTimeout(() => chicken.classList.remove('caught'), 300);
+            // Đánh dấu đang di chuyển
+            chicken.classList.add('chicken-moving');
+            
+            // Xóa transition trong lúc chạy animation catch
+            chicken.classList.remove('chicken-move');
+            
+            // Thêm animation catch
+            chicken.classList.add('chicken-catch');
             
             // Tính toán vị trí mới
             const gameArea = document.querySelector('.game-area');
-            const maxX = gameArea.offsetWidth - 40;
-            const maxY = gameArea.offsetHeight - 40;
+            const chickenSize = 40;
+            const maxX = Math.max(0, gameArea.offsetWidth - chickenSize);
+            const maxY = Math.max(0, gameArea.offsetHeight - chickenSize);
             
-            // Random vị trí mới
-            const newX = Math.random() * maxX;
-            const newY = Math.random() * maxY;
+            const newX = Math.min(Math.max(0, Math.random() * maxX), maxX);
+            const newY = Math.min(Math.max(0, Math.random() * maxY), maxY);
             const rotation = Math.random() * 360;
+
+            // Đợi animation catch kết thúc
+            setTimeout(() => {
+                // Xóa animation catch
+                chicken.classList.remove('chicken-catch');
+                
+                // Thêm lại transition cho di chuyển
+                chicken.classList.add('chicken-move');
+                
+                // Di chuyển đến vị trí mới
+                requestAnimationFrame(() => {
+                    chicken.style.transform = `translate(${newX}px, ${newY}px) rotate(${rotation}deg)`;
+                    
+                    // Đợi transition di chuyển kết thúc
+                    setTimeout(() => {
+                        chicken.classList.remove('chicken-moving');
+                    }, 300);
+                });
+            }, 300);
+        }
+
+        // Sửa lại hàm resetChicken
+        function resetChicken() {
+            const gameArea = document.querySelector('.game-area');
+            let chicken = document.querySelector('.chicken');
             
-            // Di chuyển con gà
-            chicken.style.transform = `translate(${newX}px, ${newY}px) rotate(${rotation}deg)`;
+            if (chicken) chicken.remove();
+            
+            chicken = document.createElement('div');
+            chicken.className = 'chicken chicken-move';
+            chicken.innerHTML = '🐔';
+            chicken.onclick = function() { catchChicken(this); };
+            
+            // Đặt vị trí ban đầu trước khi thêm vào DOM
+            const chickenSize = 40;
+            const centerX = (gameArea.offsetWidth - chickenSize) / 2;
+            const centerY = (gameArea.offsetHeight - chickenSize) / 2;
+            chicken.style.transform = `translate(${centerX}px, ${centerY}px)`;
+            
+            gameArea.appendChild(chicken);
+            return chicken;
         }
 
         function showFinalResult() {
@@ -971,16 +1025,31 @@ print(password)`;
                 miniGame.style.display = "block";
                 overlay.style.display = "block";
                 
-                // Reset vị trí con gà vào giữa
-                const chicken = document.querySelector(".chicken");
-                const gameArea = document.querySelector(".game-area");
-                chicken.style.transform = `translate(
-                    ${gameArea.offsetWidth/2 - 20}px, 
-                    ${gameArea.offsetHeight/2 - 20}px
-                )`;
+                // Reset game state
+                gameActive = true;
+                score = 0;
+                document.getElementById("score").textContent = `Điểm: ${score}`;
+                
+                // Reset con gà
+                resetChicken();
+                
+                // Thêm interval kiểm tra con gà
+                window.chickenCheckInterval = setInterval(() => {
+                    const chicken = document.querySelector('.chicken');
+                    if (!chicken || !chicken.parentElement) {
+                        resetChicken();
+                    }
+                }, 1000);
+                
             } else {
                 miniGame.style.display = "none";
                 overlay.style.display = "none";
+                gameActive = false;
+                
+                // Clear interval kiểm tra
+                if (window.chickenCheckInterval) {
+                    clearInterval(window.chickenCheckInterval);
+                }
             }
         }
 
