@@ -787,6 +787,85 @@
                 border-width: 3px;
             }
         }
+
+        /* Thêm CSS để tránh thanh điều hướng mobile */
+        @supports (padding: env(safe-area-inset-bottom)) {
+            .mini-game {
+                padding-bottom: calc(20px + env(safe-area-inset-bottom));
+            }
+            
+            .game-section {
+                bottom: calc(80px + env(safe-area-inset-bottom));
+            }
+            
+            @media (max-width: 768px) {
+                .game-section {
+                    bottom: calc(60px + env(safe-area-inset-bottom));
+                }
+            }
+            
+            @media (max-width: 480px) {
+                .game-section {
+                    bottom: calc(40px + env(safe-area-inset-bottom));
+                }
+            }
+        }
+
+        /* Đảm bảo nội dung không bị che khi scroll */
+        .mini-game {
+            max-height: calc(100vh - env(safe-area-inset-bottom) - 20px);
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        /* Thêm padding cho phần cuối của mini game */
+        .mini-game .result-container {
+            padding-bottom: calc(15px + env(safe-area-inset-bottom));
+        }
+
+        /* Tối ưu cho iPhone X trở lên */
+        @media only screen 
+        and (device-width: 375px) 
+        and (device-height: 812px) 
+        and (-webkit-device-pixel-ratio: 3),
+        only screen 
+        and (device-width: 414px) 
+        and (device-height: 896px) 
+        and (-webkit-device-pixel-ratio: 2),
+        only screen 
+        and (device-width: 390px) 
+        and (device-height: 844px) 
+        and (-webkit-device-pixel-ratio: 3) {
+            .mini-game {
+                padding-bottom: 34px;
+            }
+            
+            .game-section {
+                bottom: calc(80px + 34px);
+            }
+        }
+
+        /* Tối ưu cho các thiết bị có notch */
+        @supports (padding-bottom: constant(safe-area-inset-bottom)) {
+            .mini-game {
+                padding-bottom: constant(safe-area-inset-bottom);
+            }
+            
+            .game-section {
+                bottom: calc(80px + constant(safe-area-inset-bottom));
+            }
+        }
+
+        /* Đảm bảo nút mini game luôn hiển thị */
+        .game-toggle {
+            position: relative;
+            z-index: 1001;
+        }
+
+        /* Thêm margin bottom cho content cuối cùng */
+        .mini-game > *:last-child {
+            margin-bottom: env(safe-area-inset-bottom, 20px);
+        }
     </style>
 </head>
 <body>
@@ -874,7 +953,7 @@
             "💭 Nghĩ đơn giản thôi! Càng nghĩ phức tạp càng... gà! 🤯",
             "🎯 Hint: Đừng nhìn chằm chằm vào màn hình nữa, não nó... bay mất rồi! 🧠",
             "🌟 Fun fact: ASCII là cách mã hóa ký tự thành số... nhưng bạn có hiểu không? 😏",
-            "🎯 Đố bạn: Tại sao gà gáy? Vì nó... không biết code! 🐓",
+            "�� Đố bạn: Tại sao gà gáy? Vì nó... không biết code! 🐓",
             "🔍 Hint: Có thể dùng Python... nếu bạn biết Python! 🐍",
             "💡 Fact: 80% người đọc hint này vẫn chưa hiểu gì... 20% còn lại đã bỏ cuộc! 😅",
             "🎯 Hint: Nếu bạn thấy khó quá... thì đúng rồi đó! 😂",
