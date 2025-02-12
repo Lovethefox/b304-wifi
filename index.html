@@ -874,6 +874,56 @@
         .mini-game > *:last-child {
             margin-bottom: env(safe-area-inset-bottom, 20px);
         }
+
+        /* Style cho nút mini game */
+        .game-section {
+            position: fixed;
+            right: 20px;
+            bottom: 20px;
+            z-index: 999;
+        }
+
+        /* Responsive cho nút game */
+        @media (max-width: 768px) {
+            .game-section {
+                position: static;
+                text-align: right;
+                padding: 10px 15px;
+                margin-bottom: 20px;
+            }
+
+            .game-toggle {
+                display: inline-block;
+                padding: 8px 15px;
+                font-size: 0.9em;
+                box-shadow: 0 0 15px rgba(0, 255, 0, 0.3);
+            }
+
+            /* Đảm bảo nút không bị che khi scroll */
+            .game-toggle.sticky {
+                position: fixed;
+                top: 10px;
+                right: 15px;
+                z-index: 999;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .game-section {
+                padding: 8px 10px;
+                margin-bottom: 15px;
+            }
+
+            .game-toggle {
+                padding: 6px 12px;
+                font-size: 0.85em;
+            }
+
+            .game-toggle.sticky {
+                top: 8px;
+                right: 10px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -1359,6 +1409,25 @@ print(password)`;
                 `;
             });
         }
+
+        // Thêm script để xử lý sticky button trên mobile
+        const handleScroll = () => {
+            if (window.innerWidth <= 768) {
+                const gameToggle = document.querySelector('.game-toggle');
+                const gameSection = document.querySelector('.game-section');
+                const sectionRect = gameSection.getBoundingClientRect();
+                
+                if (sectionRect.top < 0) {
+                    gameToggle.classList.add('sticky');
+                } else {
+                    gameToggle.classList.remove('sticky');
+                }
+            }
+        };
+
+        // Thêm event listener cho scroll
+        window.addEventListener('scroll', handleScroll);
+        window.addEventListener('resize', handleScroll);
     </script>
 </body>
 </html>
