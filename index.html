@@ -238,7 +238,7 @@
         .game-section {
             position: fixed;
             right: 20px;
-            bottom: 80px; /* Tăng khoảng cách với bottom */
+            bottom: 20px;
             z-index: 999;
         }
 
@@ -265,7 +265,7 @@
         @media (max-width: 768px) {
             .game-section {
                 right: 15px;
-                bottom: 60px;
+                bottom: 15px;
             }
             
             .game-toggle {
@@ -277,7 +277,7 @@
         @media (max-width: 480px) {
             .game-section {
                 right: 10px;
-                bottom: 40px;
+                bottom: 10px;
             }
             
             .game-toggle {
@@ -792,21 +792,29 @@
         @supports (padding: env(safe-area-inset-bottom)) {
             .mini-game {
                 padding-bottom: calc(20px + env(safe-area-inset-bottom));
+                max-height: calc(100vh - env(safe-area-inset-bottom) - 20px);
+                overflow-y: auto;
+                -webkit-overflow-scrolling: touch;
             }
             
             .game-section {
-                bottom: calc(80px + env(safe-area-inset-bottom));
+                position: fixed;
+                right: 20px;
+                bottom: 20px;
+                z-index: 999;
             }
             
             @media (max-width: 768px) {
                 .game-section {
-                    bottom: calc(60px + env(safe-area-inset-bottom));
+                    right: 15px;
+                    bottom: 15px;
                 }
             }
             
             @media (max-width: 480px) {
                 .game-section {
-                    bottom: calc(40px + env(safe-area-inset-bottom));
+                    right: 10px;
+                    bottom: 10px;
                 }
             }
         }
@@ -953,7 +961,7 @@
             "💭 Nghĩ đơn giản thôi! Càng nghĩ phức tạp càng... gà! 🤯",
             "🎯 Hint: Đừng nhìn chằm chằm vào màn hình nữa, não nó... bay mất rồi! 🧠",
             "🌟 Fun fact: ASCII là cách mã hóa ký tự thành số... nhưng bạn có hiểu không? 😏",
-            "�� Đố bạn: Tại sao gà gáy? Vì nó... không biết code! 🐓",
+            "🎯 Đố bạn: Tại sao gà gáy? Vì nó... không biết code! 🐓",
             "🔍 Hint: Có thể dùng Python... nếu bạn biết Python! 🐍",
             "💡 Fact: 80% người đọc hint này vẫn chưa hiểu gì... 20% còn lại đã bỏ cuộc! 😅",
             "🎯 Hint: Nếu bạn thấy khó quá... thì đúng rồi đó! 😂",
