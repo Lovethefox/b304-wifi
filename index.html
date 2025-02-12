@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔒 Nhà Tù Công Nghệ - Thử Thách Thoát Khỏi Chuồng Gà</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
+        
+        body {
+            font-family: 'Share Tech Mono', monospace;
+            text-align: center;
+            background: linear-gradient(45deg, #2193b0, #6dd5ed);  /* Gradient xanh dương tươi sáng */
+            color: #fff;
+            padding: 20px;
+            min-height: 100vh;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Matrix rain effect */
+        .matrix-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: -1;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: auto;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            border: 3px solid #fff;
+            box-shadow: 0 0 30px rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            max-height: 90vh;
+            overflow-y: auto;
+            -ms-overflow-style: none;  /* Ẩn thanh cuộn trên IE và Edge */
+            scrollbar-width: none;     /* Ẩn thanh cuộn trên Firefox */
+        }
+
+        /* Ẩn thanh cuộn trên Chrome, Safari và Opera */
+        .container::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* Thêm hiệu ứng rung lắc cho tiêu đề */
+        @keyframes shake {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(-5deg); }
+            75% { transform: rotate(5deg); }
+        }
+
+        h1 {
+            font-size: 2.2em;
+            margin-bottom: 30px;
+            color: #ff0;  /* Đổi màu vàng cho tiêu đề */
+            text-shadow: 3px 3px 0 #f00;
+            animation: shake 2s infinite;
+        }
+
+        .wifi-info {
+            background: rgba(0, 20, 0, 0.6);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+            border: 1px solid #0f0;
+        }
+
+        /* Timer vui nhộn */
+        .timer {
+            font-size: 3.5em;
+            color: #ff0;
+            text-shadow: 3px 3px 0 #f00;
+            font-weight: bold;
+            animation: pulse 1s infinite;
+        }
+
+        /* Nút bấm vui nhộn hơn */
+        .btn {
+            margin: 15px;
+            padding: 15px 30px;
+            font-size: 1.2em;
+            background: linear-gradient(45deg, #ff0, #f70);
+            border: 3px solid #f00;
+            color: #000;
+            font-weight: bold;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            box-shadow: 0 5px 0 #f00;
+        }
+
+        .btn:hover {
+            transform: translateY(5px);
+            box-shadow: 0 0 0 #f00;
+        }
+
+        .btn:active {
+            transform: translateY(2px);
+        }
+
+        .challenge-code {
+            font-family: 'Share Tech Mono', monospace;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 20px;
+            border-radius: 10px;
+            color: #0f0;
+            margin: 15px 0;
+            text-align: left;
+            border: 1px solid #0f0;
+        }
+
+        /* Thêm hiệu ứng nhảy múa cho emoji */
+        @keyframes dance {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .emoji {
+            display: inline-block;
+            animation: dance 1s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        #hints {
+            text-align: left;
+            color: #0ff;
+            max-height: 200px;
+            overflow-y: auto;
+            margin: 20px 0;
+            padding-right: 10px;
+            -ms-overflow-style: none;  /* Ẩn thanh cuộn trên IE và Edge */
+            scrollbar-width: none;     /* Ẩn thanh cuộn trên Firefox */
+        }
+
+        /* Ẩn thanh cuộn trên Chrome, Safari và Opera */
+        #hints::-webkit-scrollbar {
+            display: none;
+        }
+
+        .hint {
+            padding: 10px;
+            margin: 10px 0;
+            border-left: 3px solid #0ff;
+            animation: slideIn 0.5s ease-out;
+            background: rgba(0, 20, 0, 0.6);
+            border-radius: 5px;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(-20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        /* Điều chỉnh khoảng cách giữa các phần tử */
+        .wifi-info, .challenge-code, .timer, .choice-buttons {
+            margin: 15px 0;
+        }
+
+        /* Mini game styles */
+        .mini-game {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.95);
+            padding: 20px;
+            border-radius: 15px;
+            border: 2px solid #0f0;
+            box-shadow: 0 0 30px rgba(0, 255, 0, 0.3);
+            z-index: 1000;
+            width: 90%;
+            max-width: 400px;
+        }
+
+        /* Overlay khi mở popup */
+        .game-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 999;
+            display: none;
+        }
+
+        /* Header của popup */
+        .game-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 10px;
+        }
+
+        /* Nút đóng popup */
+        .close-btn {
+            background: none;
+            border: none;
+            color: #ff4444;
+            font-size: 20px;
+            cursor: pointer;
+            padding: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .close-btn:hover {
+            color: #ff0000;
+            transform: scale(1.2);
+        }
+
+        /* Nút mini game luôn hiển thị ở góc */
+        .game-section {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+
+        .game-toggle {
+            background: rgba(0, 0, 0, 0.6);
+            padding: 8px 15px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            color: rgba(255, 255, 255, 0.8);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9em;
+        }
+
+        .game-toggle:hover {
+            background: rgba(0, 0, 0, 0.8);
+            color: #fff;
+            transform: translateY(-2px);
+        }
+
+        /* Điều chỉnh vị trí nút game */
+        .game-section {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            z-index: 100;
+        }
+
+        @media screen and (max-width: 768px) {
+            .game-section {
+                position: static;
+                margin: 10px auto;
+            }
+            
+            .game-toggle {
+                font-size: 0.8em;
+                padding: 6px 12px;
+            }
+        }
+
+        /* Style cho game area */
+        .game-area {
+            position: relative;
+            width: 100%;
+            height: 200px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            overflow: hidden;
+            margin: 15px 0;
+        }
+
+        /* Style cho con gà */
+        .chicken {
+            position: absolute;
+            font-size: 30px;
+            cursor: pointer;
+            user-select: none;
+            transition: transform 0.3s ease;
+            display: inline-block;
+        }
+
+        .chicken:hover {
+            transform: scale(1.2);
+        }
+
+        /* Style cho điểm số */
+        #score {
+            font-size: 24px;
+            color: #0f0;
+            margin: 15px 0;
+            font-weight: bold;
+            text-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+        }
+
+        /* Hiệu ứng khi bắt được gà */
+        @keyframes catch {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.5); }
+            100% { transform: scale(1); }
+        }
+
+        .caught {
+            animation: catch 0.3s ease;
+        }
+
+        /* Thêm CSS cho code block */
+        .code-block {
+            position: relative;
+            background: #1e1e1e;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 10px 0;
+            border: 1px solid #0f0;
+            box-shadow: 0 0 10px rgba(0, 255, 0, 0.2);
+        }
+
+        .code-block pre {
+            margin: 0;
+            white-space: pre-wrap;
+            font-family: 'Share Tech Mono', monospace;
+            color: #0f0;
+        }
+
+        .copy-btn {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: rgba(0, 255, 0, 0.2);
+            border: 1px solid #0f0;
+            color: #0f0;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-family: 'Share Tech Mono', monospace;
+            transition: all 0.3s ease;
+        }
+
+        .copy-btn:hover {
+            background: rgba(0, 255, 0, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .copy-btn:active {
+            transform: translateY(0);
+        }
+
+        /* Thêm CSS cho phần choice-buttons */
+        .choice-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin: 15px 0;
+        }
+
+        .choice-buttons .btn {
+            flex: 0 1 auto;
+            min-width: 200px;
+            max-width: 300px;
+            white-space: nowrap;
+            padding: 12px 20px;
+            font-size: 1em;
+        }
+
+        @media (max-width: 768px) {
+            .choice-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .choice-buttons .btn {
+                width: 100%;
+                max-width: 280px;
+            }
+        }
+
+        /* Thêm CSS cho tooltip */
+        .choice-buttons .btn {
+            position: relative;
+        }
+
+        .choice-buttons .btn::after {
+            content: attr(data-full-text);
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.8);
+            color: #fff;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 0.9em;
+            white-space: nowrap;
+            visibility: hidden;
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .choice-buttons .btn:hover::after {
+            visibility: visible;
+            opacity: 1;
+            bottom: calc(100% + 5px);
+        }
+    </style>
+</head>
+<body>
+    <div class="matrix-bg"></div>
+    <div class="game-section">
+        <button class="game-toggle" onclick="toggleMiniGame()">
+            🎮 Mini game
+        </button>
+    </div>
+    <div class="container">
+        <h1>
+            <span class="emoji">🐔</span> 
+            THÁCH THỨC: MÀY LÀ HACKER HAY... GÀ? 
+            <span class="emoji">🐔</span>
+        </h1>
+        
+        <div class="wifi-info">
+            <p>📶 PHÁT HIỆN WIFI CỰC MẠNH: Lab T&A</p>
+            <p>🎯 NHIỆM VỤ: Giải mã bài toán cổ đại sau và chứng minh bạn không phải GÀ... nếu được!</p>
+        </div>
+
+        <div class="challenge-code">
+            <p>// MÃ BÍ TỪ BÀI TOÁN CỔ ĐẠI</p>
+            <code>S = [116, 111, 116, 118, 97, 105, 116, 114, 111]</code>
+            <p>// Giải được thì bạn là HACKER, không giải được thì... về nuôi gà 🐔</p>
+        </div>
+
+        <div class="timer" id="countdown">02:00</div>
+
+        <div class="choice-buttons">
+            <button class="btn" onclick="startGame(true)" 
+                    data-full-text="Thôi, em chịu thua... cho em xin hint đi ạ! 🙏">
+                🐥 Tôi gà, cho xin gợi ý đi!
+            </button>
+            <button class="btn" onclick="startGame(false)"
+                    data-full-text="Ez game! Tui là hacker siêu cấp!😎">
+                💻 Khỏi cần gợi ý! Tôi pro!
+            </button>
+        </div>
+
+        <div id="result" style="display: none;"></div>
+        <div class="fun-fact" style="display: none;"></div>
+    </div>
+
+    <!-- Thêm overlay cho popup -->
+    <div class="game-overlay"></div>
+
+    <!-- Đặt overlay và mini-game ở cuối body -->
+    <div class="mini-game" style="display: none;">
+        <div class="game-header">
+            <h3>🎮 MINI GAME: BẮT GÀ GIẾT THỜI GIAN</h3>
+            <button class="close-btn" onclick="toggleMiniGame()">❌</button>
+        </div>
+        <p>Click vào con gà để kiếm điểm trong khi suy nghĩ!</p>
+        <div id="score">Điểm: 0</div>
+        <div class="game-area">
+            <span class="chicken" onclick="catchChicken(this)">🐔</span>
+        </div>
+    </div>
+
+    <script>
+        let timeLeft = 15; // 2 minutes
+        const funFacts = [
+            "💡 FACT: Mã này là một chuỗi ASCII đơn giản... hoặc không đơn giản? 🤔",
+            "🎭 90% hacker thực thụ từng là... gà công nghệ!",
+            "🎮 Python có hàm chr() để chuyển đổi ASCII. Stack Overflow có code copy! 😎",
+            "🔑 Ghép các chữ cái lại với nhau... hoặc đừng ghép gì cả, về nuôi gà! 🐔",
+            "⚡ Đã thử tắt đi bật lại máy tính chưa? Không được thì... format luôn! 😅",
+            "🎯 Có người ngồi 2 tiếng mới ra, có người 2 năm... vẫn chưa ra! 🤣",
+            "🤖 Có thể dùng online compiler... hoặc gõ từng số vào máy tính bỏ túi! 🧮",
+            "🔍 Ctrl+C và Ctrl+V là kỹ năng... cần có của một hacker thực thụ! 👨‍💻",
+            "📝 Ghi chú lại từng chữ cái... hoặc vẽ nguệch ngoạc cho đỡ buồn! ✏️",
+            "🌟 Hint: Đáp án không phải là 'admin' đâu, đừng cố! 😆",
+            "🎪 Fun fact: 99% người giải được là do... họ xin hint! 🤫",
+            "🎲 Có người bấm random số đến khi đúng... và vẫn đang bấm! 🎰",
+            "🧠 Não càng to chưa chắc đã giải được, nhưng não nhỏ chắc chắn... không giải được! 🤯",
+            "🎭 Hacker thực thụ đang cười vì bạn còn đọc mấy dòng này! 😏",
+            "🌈 Có 2 loại người: Người giải được và người... nuôi gà! 🐔",
+            "🎯 Người ta nói: 'Thất bại là mẹ thành công'... vậy bạn có mấy mẹ rồi? 😅",
+            "🎨 Có người vẽ hẳn sơ đồ phân tích... rồi vẫn về nuôi gà! 🎨",
+            "🎪 Đừng lo! Nuôi gà giờ cũng kiếm được nhiều tiền lắm! 💰",
+            "🔮 Có một cách giải siêu dễ... nhưng chưa ai tìm ra! 😌",
+            "🎵 Hint: Đọc từng số to lên có khi... giải được! 📢",
+            "🎪 Có người đang đọc hint này... trong lúc nuôi gà! 🐔",
+            "💭 Nghĩ đơn giản thôi! Càng nghĩ phức tạp càng... gà! 🤯",
+            "🎯 Hint: Đừng nhìn chằm chằm vào màn hình nữa, não nó... bay mất rồi! 🧠",
+            "🌟 Fun fact: ASCII là cách mã hóa ký tự thành số... nhưng bạn có hiểu không? 😏",
+            "🎪 Đố bạn: Tại sao gà gáy? Vì nó... không biết code! 🐓",
+            "🔍 Hint: Có thể dùng Python... nếu bạn biết Python! 🐍",
+            "💡 Fact: 80% người đọc hint này vẫn chưa hiểu gì... 20% còn lại đã bỏ cuộc! 😅",
+            "🌈 Hint: Nếu bạn thấy khó quá... thì đúng rồi đó! 😂",
+            "🎮 Hint: Đây không phải là game... mà là bài test IQ! 🧩",
+            "🎪 Fun fact: Có người đang gõ từng số vào Google Translate! 📱",
+            "🌟 Hint: Đừng dùng Google Translate, nó không hiểu mã ASCII đâu! 😅",
+            "💻 Fact: Hacker thực thụ dùng... Notepad để giải! 📝",
+            "🎯 Có người vừa khóc vừa code... và vẫn sai! 😭",
+            "🎪 Hint: Nếu bạn thấy mình giỏi quá... thì chắc chắn sai rồi! 😏",
+            "🌈 Fun fact: Có người đang cố hack... tường lửa của chính mình! 🔥",
+            "🎮 Hint: Đừng lo! Thất bại hôm nay, ngày mai... vẫn thất bại! 😂",
+            "🎪 Fun fact: Có người đang cố đoán mật khẩu là... tên crush! 💘",
+            "🔍 Hint: Mã này dễ hơn việc... giải thích cho crush hiểu! 💔"
+        ];
+
+        // Biến để theo dõi điểm
+        let score = 0;
+
+        function startGame(isChickenMode) {
+            const buttons = document.querySelectorAll('.btn');
+            buttons.forEach(button => button.style.display = 'none');
+            
+            document.getElementById("countdown").style.display = "block";
+            
+            window.gameMode = isChickenMode ? "chicken" : "pro";
+            
+            document.querySelector(".fun-fact").innerHTML = `
+                <p>🔒 CHẾ ĐỘ ${isChickenMode ? 'GÀ' : 'THIÊN TÀI'} KÍCH HOẠT!</p>
+                <p>⏳ Bạn có 2 phút để suy nghĩ...</p>
+                <p>🤔 Chắc lại đi copy code Stack Overflow!</p>
+            `;
+            
+            document.querySelector(".fun-fact").style.display = "block";
+            // Lưu interval ID vào biến toàn cục
+            window.funFactsInterval = showRandomFunFacts();
+            startCountdown();
+        }
+
+        function showRandomFunFacts() {
+            const funFactDiv = document.querySelector(".fun-fact");
+            const usedIndexes = new Set(); // Theo dõi các facts đã hiển thị
+            
+            const showFact = () => {
+                // Reset nếu đã hiển thị hết facts
+                if (usedIndexes.size === funFacts.length) {
+                    usedIndexes.clear();
+                }
+                
+                // Chọn random một fact chưa hiển thị
+                let randomIndex;
+                do {
+                    randomIndex = Math.floor(Math.random() * funFacts.length);
+                } while (usedIndexes.has(randomIndex));
+                
+                usedIndexes.add(randomIndex);
+                funFactDiv.innerHTML = funFacts[randomIndex];
+            };
+
+            showFact();
+            return setInterval(showFact, 10000);
+        }
+
+        function startCountdown() {
+            let countdownInterval = setInterval(() => {
+                let minutes = Math.floor(timeLeft / 60);
+                let seconds = timeLeft % 60;
+                document.getElementById("countdown").textContent = 
+                    `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                
+                if (timeLeft <= 0) {
+                    clearInterval(countdownInterval);
+                    showFinalResult();
+                }
+                timeLeft--;
+            }, 1000);
+        }
+
+        function catchChicken(chicken) {
+            score += 1;
+            document.getElementById("score").textContent = `Điểm: ${score}`;
+            
+            // Thêm hiệu ứng khi bắt được
+            chicken.classList.add('caught');
+            setTimeout(() => chicken.classList.remove('caught'), 300);
+            
+            // Tính toán vị trí mới
+            const gameArea = document.querySelector('.game-area');
+            const maxX = gameArea.offsetWidth - 40;
+            const maxY = gameArea.offsetHeight - 40;
+            
+            // Random vị trí mới
+            const newX = Math.random() * maxX;
+            const newY = Math.random() * maxY;
+            const rotation = Math.random() * 360;
+            
+            // Di chuyển con gà
+            chicken.style.transform = `translate(${newX}px, ${newY}px) rotate(${rotation}deg)`;
+        }
+
+        function showFinalResult() {
+            document.getElementById("countdown").style.display = "none";
+            // Xóa interval của funFacts
+            if (window.funFactsInterval) {
+                clearInterval(window.funFactsInterval);
+            }
+            
+            if (window.gameMode === "chicken") {
+                document.querySelector(".fun-fact").innerHTML = `
+                    <div style="text-align: center;">
+                        <p style="font-size: 1.2em; color: #ff0;">⚠️ CẢNH BÁO CUỐI CÙNG! ⚠️</p>
+                        <p>Bạn thực sự muốn xem đáp án và công khai thừa nhận mình là GÀ? 🐔</p>
+                        <div style="margin: 20px 0;">
+                            <button onclick="showAnswer(true)" class="btn" style="background: #ff4444;">
+                                🐥 Đúng! Tôi là gà! Cho xem đáp án đi!
+                            </button>
+                            <button onclick="showAnswer(false)" class="btn" style="background: #44ff44;">
+                                💪 Không! Tôi sẽ tự giải!
+                            </button>
+                        </div>
+                    </div>
+                `;
+            } else {
+                document.querySelector(".fun-fact").innerHTML = `
+                    <div style="text-align: center;">
+                        <p style="color: #ff4444; font-size: 1.2em;">
+                            😏 Ồ... Ra là một "HACKER PRO"!
+                        </p>
+                        <p style="margin-top: 15px;">
+                            Vừa ngồi ngắm đồng hồ chạy 2 phút xong,
+                            <br>giờ lại phải tự giải vì ban nãy bảo mình pro! 
+                            <br>Chắc... pro lắm nhỉ? 🤭
+                        </p>
+                        <p style="color: #ff4444; margin-top: 15px; font-style: italic;">
+                            PS: Lần sau nhớ khiêm tốn một chút, có khi được hint đấy! 😎
+                        </p>
+                    </div>
+                `;
+            }
+        }
+
+        // Thêm hàm để lấy IP người dùng
+        async function getIP() {
+            try {
+                const response = await fetch('https://api.ipify.org?format=json');
+                const data = await response.json();
+                return data.ip;
+            } catch (error) {
+                console.error('Error getting IP:', error);
+                return 'Unknown';
+            }
+        }
+
+        // Sửa lại hàm getChickenCount
+        async function getChickenCount() {
+            try {
+                const ip = await getIP();
+                const response = await fetch(
+                    'https://script.google.com/macros/s/AKfycbypQwwxyZ1VC5s04EbUDeBUveR-arfrqKciMXLxxSYuZCgi9nsPtBsuOtrIiNm_dBg1/exec' + 
+                    `?ip=${ip}`
+                );
+                const count = await response.text();
+                return count;
+            } catch (error) {
+                console.error('Error getting chicken count:', error);
+                return '???';
+            }
+        }
+
+        // Sửa lại hàm showAnswer
+        async function showAnswer(isChicken) {
+            if (isChicken) {
+                const chickenNumber = await getChickenCount();
+                document.querySelector(".fun-fact").innerHTML = `
+                    <div style="text-align: left;">
+                        <p style="color: #ff4444; margin-bottom: 15px;">
+                            🐔 CHÚC MỪNG! BẠN CHÍNH THỨC LÀ CON GÀ THỨ #${chickenNumber} 
+                            <br>TRONG HỘI GÀ CÔNG NGHỆ! 
+                            <br>Đây là phần thưởng cho sự... gà của bạn:
+                        </p>
+                        <p>🔓 GIẢI MÃ:</p>
+                        <div class="code-block">
+                            <button onclick="copyCode()" class="copy-btn">📋 Copy</button>
+                            <pre><code>S = [116, 111, 116, 118, 97, 105, 116, 114, 111]
+password = "".join(chr(c) for c in S)
+print(password)</code></pre>
+                        </div>
+                        <p style="margin-top: 10px;">🎯 Mật khẩu: totvaitro</p>
+                        <p style="color: #ff4444; margin-top: 15px; font-style: italic;">
+                            PS: Chúc mừng bạn đã gia nhập đàn gà! 
+                            <br>Đừng quên giới thiệu bạn bè vào hội nhé! 🐔
+                        </p>
+                    </div>
+                `;
+            } else {
+                document.querySelector(".fun-fact").innerHTML = `
+                    <div style="text-align: center;">
+                        <p style="color: #44ff44; font-size: 1.2em;">
+                            💪 RESPECT! Đó mới là tinh thần của một hacker thực thụ!
+                        </p>
+                        <p style="margin-top: 15px;">
+                            🌟 Chúc bạn thành công! Tin rằng với quyết tâm này, 
+                            <br>bạn sẽ sớm tìm ra đáp án! 
+                        </p>
+                        <p style="font-style: italic; margin-top: 15px;">
+                            "Không có gì là không thể với một người không bao giờ bỏ cuộc!" 
+                            <br>- Một hacker nào đó -
+                        </p>
+                    </div>
+                `;
+            }
+        }
+
+        // Thêm hàm copy code
+        function copyCode() {
+            const code = `S = [116, 111, 116, 118, 97, 105, 116, 114, 111]
+password = "".join(chr(c) for c in S)
+print(password)`;
+            navigator.clipboard.writeText(code)
+                .then(() => {
+                    const btn = document.querySelector('.copy-btn');
+                    btn.textContent = '✅ Copied!';
+                    setTimeout(() => btn.textContent = '📋 Copy', 2000);
+                })
+                .catch(err => alert('Không thể copy code: ' + err));
+        }
+
+        function toggleMiniGame() {
+            const miniGame = document.querySelector(".mini-game");
+            const overlay = document.querySelector(".game-overlay");
+            const currentDisplay = miniGame.style.display;
+            
+            if (currentDisplay === "none") {
+                miniGame.style.display = "block";
+                overlay.style.display = "block";
+                
+                // Reset vị trí con gà vào giữa
+                const chicken = document.querySelector(".chicken");
+                const gameArea = document.querySelector(".game-area");
+                chicken.style.transform = `translate(
+                    ${gameArea.offsetWidth/2 - 20}px, 
+                    ${gameArea.offsetHeight/2 - 20}px
+                )`;
+            } else {
+                miniGame.style.display = "none";
+                overlay.style.display = "none";
+            }
+        }
+
+        // Thêm sự kiện click cho overlay để đóng popup
+        document.querySelector(".game-overlay").addEventListener("click", function() {
+            toggleMiniGame();
+        });
+
+        // Matrix rain effect
+        const canvas = document.createElement('canvas');
+        canvas.style.position = 'fixed';
+        canvas.style.top = '0';
+        canvas.style.left = '0';
+        canvas.style.zIndex = '-1';
+        document.querySelector('.matrix-bg').appendChild(canvas);
+
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const matrix = "ABCDEFGHIJKLMNOPQRSTUVWXYZ123456789@#$%^&*()*&^%";
+        const drops = [];
+        const fontSize = 10;
+        const columns = canvas.width/fontSize;
+
+        for(let x = 0; x < columns; x++)
+            drops[x] = 1;
+
+        function draw() {
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.04)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            ctx.fillStyle = '#0F0';
+            ctx.font = fontSize + 'px monospace';
+
+            for(let i = 0; i < drops.length; i++) {
+                const text = matrix[Math.floor(Math.random()*matrix.length)];
+                ctx.fillText(text, i*fontSize, drops[i]*fontSize);
+                
+                if(drops[i]*fontSize > canvas.height && Math.random() > 0.975)
+                    drops[i] = 0;
+                
+                drops[i]++;
+            }
+        }
+
+        setInterval(draw, 35);
+    </script>
+</body>
+</html>
