@@ -644,6 +644,149 @@
         .loading div {
             will-change: transform, opacity;
         }
+
+        /* Tối ưu cho mobile */
+        @media (max-width: 768px) {
+            .mini-game {
+                width: 95%;
+                max-width: none;
+                padding: 15px;
+                margin: 10px;
+            }
+
+            .game-area {
+                height: 250px; /* Tăng chiều cao game area trên mobile */
+                margin: 10px 0;
+            }
+
+            .chicken {
+                font-size: 25px; /* Giảm kích thước gà cho phù hợp mobile */
+            }
+
+            .game-header {
+                margin-bottom: 10px;
+                padding-bottom: 5px;
+            }
+
+            #score {
+                font-size: 20px;
+                margin: 10px 0;
+            }
+
+            .code-block {
+                padding: 10px;
+                margin: 8px 0;
+                font-size: 13px;
+            }
+
+            .code-block pre {
+                max-width: 100%;
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            .copy-btn {
+                font-size: 12px;
+                padding: 4px 8px;
+            }
+
+            .chicken-number {
+                font-size: 1.5em;
+                padding: 5px 10px;
+                margin: 8px 0;
+            }
+
+            .result-message {
+                font-size: 0.9em;
+                line-height: 1.4;
+            }
+
+            .btn {
+                padding: 8px 15px;
+                font-size: 0.9em;
+                margin: 5px;
+                min-width: 150px;
+            }
+
+            /* Tối ưu cho màn hình thấp */
+            @media (max-height: 600px) {
+                .mini-game {
+                    top: 0;
+                    transform: translate(-50%, 0);
+                    max-height: 100vh;
+                    overflow-y: auto;
+                }
+
+                .game-area {
+                    height: 200px;
+                }
+            }
+
+            /* Tối ưu cho màn hình siêu nhỏ */
+            @media (max-width: 320px) {
+                .mini-game {
+                    padding: 10px;
+                }
+
+                .game-area {
+                    height: 180px;
+                }
+
+                .chicken {
+                    font-size: 20px;
+                }
+
+                .code-block {
+                    font-size: 11px;
+                    padding: 8px;
+                }
+
+                .btn {
+                    padding: 6px 12px;
+                    font-size: 0.85em;
+                    min-width: 120px;
+                }
+            }
+        }
+
+        /* Tối ưu scrollbar trên mobile */
+        .code-block pre::-webkit-scrollbar {
+            height: 4px;
+        }
+
+        .code-block pre::-webkit-scrollbar-track {
+            background: rgba(0, 255, 0, 0.1);
+            border-radius: 2px;
+        }
+
+        .code-block pre::-webkit-scrollbar-thumb {
+            background: rgba(0, 255, 0, 0.3);
+            border-radius: 2px;
+        }
+
+        /* Tối ưu touch area */
+        .chicken {
+            padding: 10px;
+            margin: -10px;
+        }
+
+        /* Ngăn chặn zoom khi double tap trên mobile */
+        .game-area {
+            touch-action: manipulation;
+        }
+
+        /* Tối ưu loading animation cho mobile */
+        @media (max-width: 768px) {
+            .loading {
+                width: 50px;
+                height: 50px;
+                margin: 15px auto;
+            }
+
+            .loading div {
+                border-width: 3px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -731,7 +874,7 @@
             "💭 Nghĩ đơn giản thôi! Càng nghĩ phức tạp càng... gà! 🤯",
             "🎯 Hint: Đừng nhìn chằm chằm vào màn hình nữa, não nó... bay mất rồi! 🧠",
             "🌟 Fun fact: ASCII là cách mã hóa ký tự thành số... nhưng bạn có hiểu không? 😏",
-            "�� Đố bạn: Tại sao gà gáy? Vì nó... không biết code! 🐓",
+            "🎯 Đố bạn: Tại sao gà gáy? Vì nó... không biết code! 🐓",
             "🔍 Hint: Có thể dùng Python... nếu bạn biết Python! 🐍",
             "💡 Fact: 80% người đọc hint này vẫn chưa hiểu gì... 20% còn lại đã bỏ cuộc! 😅",
             "🎯 Hint: Nếu bạn thấy khó quá... thì đúng rồi đó! 😂",
@@ -975,7 +1118,7 @@
                     <div class="result-container">
                         <div style="text-align: center;">
                             <p style="color: #ff4444; font-size: 1.2em;">
-                                �� CHÚC MỪNG! BẠN CHÍNH THỨC LÀ
+                                 CHÚC MỪNG! BẠN CHÍNH THỨC LÀ
                             </p>
                             <div class="chicken-number">
                                 CON GÀ THỨ #${chickenNumber}
