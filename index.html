@@ -520,6 +520,106 @@
                 padding: 8px;
             }
         }
+
+        /* Tối ưu container chính */
+        .container {
+            width: 100%;
+            max-width: 800px;
+            padding: 15px;
+            box-sizing: border-box;
+        }
+
+        /* Tối ưu tiêu đề */
+        h1 {
+            font-size: 1.8em;
+            text-align: center;
+            word-wrap: break-word;
+        }
+
+        /* Tối ưu code block */
+        .code-block {
+            font-size: 14px;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            padding: 10px;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+
+        /* Tối ưu loading */
+        .loading {
+            width: 60px;
+            height: 60px;
+        }
+
+        /* Responsive design */
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.4em;
+            }
+
+            .container {
+                padding: 10px;
+            }
+
+            .chicken-number {
+                font-size: 1.2em;
+                padding: 5px 10px;
+            }
+
+            .result-message, .fun-fact {
+                font-size: 0.9em;
+            }
+
+            .code-block {
+                font-size: 12px;
+                padding: 8px;
+            }
+
+            .copy-btn {
+                font-size: 12px;
+                padding: 3px 8px;
+            }
+
+            .loading {
+                width: 40px;
+                height: 40px;
+            }
+
+            .loading div {
+                border-width: 3px;
+            }
+
+            /* Tối ưu buttons */
+            .btn {
+                padding: 8px 15px;
+                font-size: 0.9em;
+                margin: 5px 0;
+            }
+
+            /* Tối ưu tooltip */
+            .choice-buttons .btn::after {
+                font-size: 0.8em;
+                padding: 3px 8px;
+                max-width: 90vw;
+                white-space: normal;
+                text-align: center;
+            }
+        }
+
+        /* Tối ưu performance */
+        * {
+            -webkit-tap-highlight-color: transparent;
+            -webkit-touch-callout: none;
+        }
+
+        .matrix-bg {
+            will-change: transform;
+        }
+
+        .loading div {
+            will-change: transform, opacity;
+        }
     </style>
 </head>
 <body>
@@ -611,7 +711,7 @@
             "🔍 Hint: Có thể dùng Python... nếu bạn biết Python! 🐍",
             "💡 Fact: 80% người đọc hint này vẫn chưa hiểu gì... 20% còn lại đã bỏ cuộc! 😅",
             "🎯 Hint: Nếu bạn thấy khó quá... thì đúng rồi đó! 😂",
-            "🎮 Hint: Đây không phải là game... mà là bài test IQ! 🧩",
+            "�� Hint: Đây không phải là game... mà là bài test IQ! 🧩",
             "🎪 Fun fact: Có người đang gõ từng số vào Google Translate! 📱",
             "🌟 Hint: Đừng dùng Google Translate, nó không hiểu mã ASCII đâu! 😅",
             "💻 Fact: Hacker thực thụ dùng... Notepad để giải! 📝",
@@ -762,20 +862,30 @@
 
         // Tối ưu hàm getChickenCount bằng cách cache IP
         let cachedIP = null;
+        let pendingRequest = null;
         async function getChickenCount() {
             try {
-                // Sử dụng IP đã cache nếu có
-                const ip = cachedIP || await getIP();
-                if (!cachedIP) cachedIP = ip;
+                // Nếu đang có request đang chờ, trả về request đó
+                if (pendingRequest) return pendingRequest;
 
-                const response = await fetch(
-                    'https://script.google.com/macros/s/AKfycbypQwwxyZ1VC5s04EbUDeBUveR-arfrqKciMXLxxSYuZCgi9nsPtBsuOtrIiNm_dBg1/exec' + 
-                    `?ip=${ip}`
-                );
-                const count = await response.text();
-                return count;
+                // Tạo request mới
+                pendingRequest = new Promise(async (resolve) => {
+                    const ip = cachedIP || await getIP();
+                    if (!cachedIP) cachedIP = ip;
+
+                    const response = await fetch(
+                        'https://script.google.com/macros/s/AKfycbypQwwxyZ1VC5s04EbUDeBUveR-arfrqKciMXLxxSYuZCgi9nsPtBsuOtrIiNm_dBg1/exec' + 
+                        `?ip=${ip}`
+                    );
+                    const count = await response.text();
+                    pendingRequest = null;
+                    resolve(count);
+                });
+
+                return pendingRequest;
             } catch (error) {
                 console.error('Error getting chicken count:', error);
+                pendingRequest = null;
                 return '???';
             }
         }
@@ -784,14 +894,7 @@
         async function showAnswer(isChicken) {
             if (isChicken) {
                 // Hiển thị loading ngay lập tức
-                document.querySelector(".fun-fact").innerHTML = `
-                    <div style="text-align: center;">
-                        <p style="color: #ff4444; margin-bottom: 15px;">
-                            🔄 ĐANG KIỂM TRA XEM BẠN LÀ CON GÀ THỨ MẤY...
-                        </p>
-                        <div class="loading"><div></div><div></div></div>
-                    </div>
-                `;
+                showLoadingState();
 
                 // Lấy số thứ tự trong background
                 const chickenNumber = await getChickenCount();
@@ -925,6 +1028,20 @@ print(password)`;
         }
 
         setInterval(draw, 35);
+
+        // Tối ưu loading state
+        function showLoadingState() {
+            requestAnimationFrame(() => {
+                document.querySelector(".fun-fact").innerHTML = `
+                    <div style="text-align: center;">
+                        <p style="color: #ff4444; margin-bottom: 15px;">
+                            🔄 ĐANG KIỂM TRA XEM BẠN LÀ CON GÀ THỨ MẤY...
+                        </p>
+                        <div class="loading"><div></div><div></div></div>
+                    </div>
+                `;
+            });
+        }
     </script>
 </body>
 </html>
