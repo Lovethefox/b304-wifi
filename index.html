@@ -423,6 +423,103 @@
             opacity: 1;
             bottom: calc(100% + 5px);
         }
+
+        /* Thêm CSS cho loading animation */
+        .loading {
+            display: inline-block;
+            position: relative;
+            width: 80px;
+            height: 80px;
+            margin: 20px auto;
+        }
+        .loading div {
+            position: absolute;
+            border: 4px solid #0f0;
+            opacity: 1;
+            border-radius: 50%;
+            animation: loading 1s cubic-bezier(0, 0.2, 0.8, 1) infinite;
+        }
+        .loading div:nth-child(2) {
+            animation-delay: -0.5s;
+        }
+        @keyframes loading {
+            0% {
+                top: 36px;
+                left: 36px;
+                width: 0;
+                height: 0;
+                opacity: 1;
+            }
+            100% {
+                top: 0px;
+                left: 0px;
+                width: 72px;
+                height: 72px;
+                opacity: 0;
+            }
+        }
+
+        /* Thêm CSS cho số thứ tự gà */
+        .chicken-number {
+            font-size: 2em;
+            color: #ff0;
+            text-shadow: 0 0 10px #f00;
+            background: rgba(255, 0, 0, 0.1);
+            padding: 5px 15px;
+            border-radius: 15px;
+            border: 2px solid #ff0;
+            display: inline-block;
+            margin: 10px 0;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        .result-container {
+            max-width: 100%;
+            overflow-x: hidden;
+            padding: 15px;
+        }
+
+        .code-block {
+            max-width: 100%;
+            overflow-x: auto;
+        }
+
+        @media (max-width: 768px) {
+            .chicken-number {
+                font-size: 1.5em;
+                padding: 3px 10px;
+            }
+            
+            .result-message {
+                font-size: 0.9em;
+            }
+            
+            .code-block {
+                font-size: 0.85em;
+                padding: 10px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .chicken-number {
+                font-size: 1.2em;
+            }
+            
+            .result-message {
+                font-size: 0.8em;
+            }
+            
+            .code-block {
+                font-size: 0.75em;
+                padding: 8px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -493,7 +590,7 @@
             "⚡ Đã thử tắt đi bật lại máy tính chưa? Không được thì... format luôn! 😅",
             "🎯 Có người ngồi 2 tiếng mới ra, có người 2 năm... vẫn chưa ra! 🤣",
             "🤖 Có thể dùng online compiler... hoặc gõ từng số vào máy tính bỏ túi! 🧮",
-            "🔍 Ctrl+C và Ctrl+V là kỹ năng... cần có của một hacker thực thụ! 👨‍💻",
+            "🔍 Ctrl+C và Ctrl+V là kỹ năng... cần của một hacker thực thụ! 👨‍💻",
             "📝 Ghi chú lại từng chữ cái... hoặc vẽ nguệch ngoạc cho đỡ buồn! ✏️",
             "🌟 Hint: Đáp án không phải là 'admin' đâu, đừng cố! 😆",
             "🎪 Fun fact: 99% người giải được là do... họ xin hint! 🤫",
@@ -513,7 +610,7 @@
             "🎪 Đố bạn: Tại sao gà gáy? Vì nó... không biết code! 🐓",
             "🔍 Hint: Có thể dùng Python... nếu bạn biết Python! 🐍",
             "💡 Fact: 80% người đọc hint này vẫn chưa hiểu gì... 20% còn lại đã bỏ cuộc! 😅",
-            "🌈 Hint: Nếu bạn thấy khó quá... thì đúng rồi đó! 😂",
+            "🎯 Hint: Nếu bạn thấy khó quá... thì đúng rồi đó! 😂",
             "🎮 Hint: Đây không phải là game... mà là bài test IQ! 🧩",
             "🎪 Fun fact: Có người đang gõ từng số vào Google Translate! 📱",
             "🌟 Hint: Đừng dùng Google Translate, nó không hiểu mã ASCII đâu! 😅",
@@ -663,10 +760,14 @@
             }
         }
 
-        // Sửa lại hàm getChickenCount
+        // Tối ưu hàm getChickenCount bằng cách cache IP
+        let cachedIP = null;
         async function getChickenCount() {
             try {
-                const ip = await getIP();
+                // Sử dụng IP đã cache nếu có
+                const ip = cachedIP || await getIP();
+                if (!cachedIP) cachedIP = ip;
+
                 const response = await fetch(
                     'https://script.google.com/macros/s/AKfycbypQwwxyZ1VC5s04EbUDeBUveR-arfrqKciMXLxxSYuZCgi9nsPtBsuOtrIiNm_dBg1/exec' + 
                     `?ip=${ip}`
@@ -682,26 +783,47 @@
         // Sửa lại hàm showAnswer
         async function showAnswer(isChicken) {
             if (isChicken) {
-                const chickenNumber = await getChickenCount();
+                // Hiển thị loading ngay lập tức
                 document.querySelector(".fun-fact").innerHTML = `
-                    <div style="text-align: left;">
+                    <div style="text-align: center;">
                         <p style="color: #ff4444; margin-bottom: 15px;">
-                            🐔 CHÚC MỪNG! BẠN CHÍNH THỨC LÀ CON GÀ THỨ #${chickenNumber} 
-                            <br>TRONG HỘI GÀ CÔNG NGHỆ! 
-                            <br>Đây là phần thưởng cho sự... gà của bạn:
+                            🔄 ĐANG KIỂM TRA XEM BẠN LÀ CON GÀ THỨ MẤY...
                         </p>
-                        <p>🔓 GIẢI MÃ:</p>
-                        <div class="code-block">
-                            <button onclick="copyCode()" class="copy-btn">📋 Copy</button>
-                            <pre><code>S = [116, 111, 116, 118, 97, 105, 116, 114, 111]
+                        <div class="loading"><div></div><div></div></div>
+                    </div>
+                `;
+
+                // Lấy số thứ tự trong background
+                const chickenNumber = await getChickenCount();
+
+                document.querySelector(".fun-fact").innerHTML = `
+                    <div class="result-container">
+                        <div style="text-align: center;">
+                            <p style="color: #ff4444; font-size: 1.2em;">
+                                🐔 CHÚC MỪNG! BẠN CHÍNH THỨC LÀ
+                            </p>
+                            <div class="chicken-number">
+                                CON GÀ THỨ #${chickenNumber}
+                            </div>
+                            <p class="result-message" style="color: #ff4444;">
+                                TRONG HỘI GÀ CÔNG NGHỆ!
+                                <br>Đây là phần thưởng cho sự... gà của bạn:
+                            </p>
+                        </div>
+                        <div style="text-align: left; margin-top: 20px;">
+                            <p>🔓 GIẢI MÃ:</p>
+                            <div class="code-block">
+                                <button onclick="copyCode()" class="copy-btn">📋 Copy</button>
+                                <pre><code>S = [116, 111, 116, 118, 97, 105, 116, 114, 111]
 password = "".join(chr(c) for c in S)
 print(password)</code></pre>
+                            </div>
+                            <p style="margin-top: 10px;">🎯 Mật khẩu: totvaitro</p>
+                            <p style="color: #ff4444; margin-top: 15px; font-style: italic;">
+                                PS: Chúc mừng bạn đã gia nhập đàn gà! 
+                                <br>Đừng quên giới thiệu bạn bè vào hội nhé! 🐔
+                            </p>
                         </div>
-                        <p style="margin-top: 10px;">🎯 Mật khẩu: totvaitro</p>
-                        <p style="color: #ff4444; margin-top: 15px; font-style: italic;">
-                            PS: Chúc mừng bạn đã gia nhập đàn gà! 
-                            <br>Đừng quên giới thiệu bạn bè vào hội nhé! 🐔
-                        </p>
                     </div>
                 `;
             } else {
