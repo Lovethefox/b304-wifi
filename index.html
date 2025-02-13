@@ -926,6 +926,29 @@
                 right: 10px;
             }
         }
+
+        /* Sửa lại CSS cho fun-fact */
+        .fun-fact {
+            margin: 15px 0;
+            padding-bottom: env(safe-area-inset-bottom, 30px); /* Thêm padding bottom */
+        }
+
+        @media (max-width: 768px) {
+            .fun-fact {
+                padding-bottom: calc(env(safe-area-inset-bottom, 50px) + 20px); /* Tăng padding cho mobile */
+                margin-bottom: 20px;
+            }
+
+            /* Đảm bảo container có đủ không gian cho fun-fact */
+            .container {
+                padding-bottom: calc(env(safe-area-inset-bottom, 50px) + 30px);
+            }
+        }
+
+        /* Đảm bảo nội dung cuối cùng không bị che */
+        .fun-fact > *:last-child {
+            margin-bottom: env(safe-area-inset-bottom, 20px);
+        }
     </style>
 </head>
 <body>
