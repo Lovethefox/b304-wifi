@@ -38,6 +38,7 @@
             max-width: 800px;
             margin: auto;
             padding: 30px;
+            padding-bottom: calc(30px + env(safe-area-inset-bottom, 30px));
             background: rgba(255, 255, 255, 0.1);
             border-radius: 20px;
             border: 3px solid #fff;
@@ -47,6 +48,7 @@
             overflow-y: auto;
             -ms-overflow-style: none;  /* Ẩn thanh cuộn trên IE và Edge */
             scrollbar-width: none;     /* Ẩn thanh cuộn trên Firefox */
+            box-sizing: border-box;
         }
 
         /* Ẩn thanh cuộn trên Chrome, Safari và Opera */
@@ -1116,7 +1118,7 @@
             const newX = Math.min(Math.max(0, Math.random() * maxX), maxX);
             const newY = Math.min(Math.max(0, Math.random() * maxY), maxY);
             const rotation = Math.random() * 360;
-
+            
             // Đợi animation catch kết thúc
             setTimeout(() => {
                 // Xóa animation catch
@@ -1127,7 +1129,7 @@
                 
                 // Di chuyển đến vị trí mới
                 requestAnimationFrame(() => {
-                    chicken.style.transform = `translate(${newX}px, ${newY}px) rotate(${rotation}deg)`;
+            chicken.style.transform = `translate(${newX}px, ${newY}px) rotate(${rotation}deg)`;
                     
                     // Đợi transition di chuyển kết thúc
                     setTimeout(() => {
@@ -1266,14 +1268,14 @@
                             </p>
                         </div>
                         <div style="text-align: left; margin-top: 20px;">
-                            <p>🔓 GIẢI MÃ:</p>
+                        <p>🔓 GIẢI MÃ:</p>
                             <div class="code-block">
                                 <button onclick="copyCode()" class="copy-btn">📋 Copy</button>
                                 <pre><code>S = [116, 111, 116, 118, 97, 105, 116, 114, 111]
 password = "".join(chr(c) for c in S)
 print(password)</code></pre>
                             </div>
-                            <p style="margin-top: 10px;">🎯 Mật khẩu: totvaitro</p>
+                        <p style="margin-top: 10px;">🎯 Mật khẩu: totvaitro</p>
                             <p style="color: #ff4444; margin-top: 15px; font-style: italic;">
                                 PS: Chúc mừng bạn đã gia nhập đàn gà! 
                                 <br>Đừng quên giới thiệu bạn bè vào hội nhé! 🐔
